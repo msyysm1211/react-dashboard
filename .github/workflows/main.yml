@@ -36,9 +36,15 @@ jobs:
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
 
-      # 6. 部署到阿里云 ECS
+      # 6. 验证 rsync 安装
+      - name: Verify rsync installation
+        run: |
+          which rsync
+          rsync --version
+
+      # 7. 部署到阿里云 ECS
       - name: Deploy to Aliyun Server
-        uses: easingthemes/ssh-deploy@v2.1.5
+        uses: easingthemes/ssh-deploy@v4.0.3
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-avzr --delete"

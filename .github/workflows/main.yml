@@ -28,12 +28,21 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      - name: Verify rsync installation
+        run: |
+          which rsync
+          rsync --version
+
       - name: Deploy to Aliyun Server
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          source: "build/*"
-          target: ${{ secrets.TARGET }}
+        uses: easingthemes/ssh-deploy@v4.0.3
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-avzr --delete"
+          SOURCE: "build/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.TARGET }}
+          RSYNC_PATH: /usr/bin/rsync  # 明确指定 rsync 路径

@@ -2,7 +2,7 @@ name: Deploy React SPA to Aliyun ECS
 
 on:
   push:
-    branches: [ main ] # 当推送到 main 分支时触发
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # 根据项目需求选择 Node.js 版本
+          node-version: '18'
 
       # 3. 安装依赖
       - name: Install Dependencies
@@ -32,13 +32,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      # 5. 部署到阿里云 ECS
+      # 5. 安装 rsync
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      # 6. 部署到阿里云 ECS
       - name: Deploy to Aliyun Server
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-avzr --delete" # 同步并删除目标目录中多余的文件
-          SOURCE: "build/" # React 构建输出目录
+          ARGS: "-avzr --delete"
+          SOURCE: "build/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.TARGET }}

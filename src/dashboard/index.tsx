@@ -361,7 +361,7 @@ const ListPage: React.FC = () => {
       <Header style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ marginLeft: 'auto', color: '#fff' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div>API 延迟</div>
+            <div>API的延迟</div>
             <Slider
               min={100}
               max={5000}
